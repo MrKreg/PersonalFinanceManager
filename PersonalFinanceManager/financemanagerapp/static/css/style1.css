@@ -1,0 +1,44 @@
+body {
+    font: 20px Montserrat, sans-serif;
+    line-height: 1.8;
+    color: #25282c;
+    min-height: 100vh !important;
+    display: flex;
+    flex-direction: column;
+}
+p {font-size: 16px;}
+.main {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+.navbar {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    letter-spacing: 5px;
+}
+.navbar-nav  li a:hover {
+    color: #1abc9c !important;
+}
+.bla{
+    color: #2f2f2f;
+}
+.test {
+    padding-bottom: 10px;
+}
+.active {
+    font-weight: bold !important;
+}
+.far {
+    font-size: 20px;
+}
+@media only screen and (max-width: 480px) {
+    .navbar-brand{
+        font-size: 0.9rem;
+    }
+}

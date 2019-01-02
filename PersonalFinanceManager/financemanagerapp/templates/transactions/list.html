@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <caption><button type="button" class="btn btn-primary">Add transaction</button></caption>
+    <thead>
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Operation</th>
+        <th scope="col">Value</th>
+        <th scope="col">Date</th>
+        <th scope="col">Description</th>
+        <th scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.categorie }}</td>
+            <td>{{ transaction.operation_type }}</td>
+            <td>{{ transaction.value }}</td>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>
+              <div class="btn btn-sm btn-default" ><i class="far fa-edit text-primary"></i></div>
+              <div class="btn btn-sm btn-default"><i class="far fa-trash-alt text-danger"></i></div>
+          </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

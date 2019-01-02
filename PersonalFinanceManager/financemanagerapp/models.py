@@ -2,12 +2,16 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-class Categorie(models.Model):
+class ExpenseManager(models.Manager):
+    def get_queryset(self):
+        return super(ExpenseManager, self).get_queryset().filter(operayion_type='expense')
+
+class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=250)
 
     class Meta:
-        ordering = ('name')
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -17,8 +21,17 @@ class Transaction(models.Model):
         ('expense', 'Expense'),
         ('revenue', 'Revenue'),
     )
-    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='transactions')
+    categorie = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='transactions')
     operation_type = models.CharField(max_length=10, choices=OPERATION_CHOICES, default='expense')
     value = models.DecimalField(max_digits=8, decimal_places=2)
     date = models.DateField(default=timezone.now)
     description = models.CharField(max_length=250)
+
+    class Meta:
+        ordering = ('-date',)
+
+    def __str__(self):
+        return self.description
+
+    objects = models.Manager()
+    expenses = ExpenseManager()
