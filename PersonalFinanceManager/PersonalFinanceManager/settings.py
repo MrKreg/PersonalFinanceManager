@@ -31,13 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'financemanagerapp.apps.FinancemanagerappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'financemanagerapp.apps.FinancemanagerappConfig',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +120,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/mrkreg/PersonalFinanceManager/PersonalFinanceManager/financemanagerapp/static/'
+LOGIN_REDIRECT_URL = 'categories:categories_list'
+LOGIN_URL = 'categories:login'
+LOGOUT_URL = 'categories:logout'
