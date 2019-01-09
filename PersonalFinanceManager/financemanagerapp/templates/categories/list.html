@@ -3,8 +3,11 @@
 {% block title %}Categories{% endblock %}
 
 {% block content %}
+<h1 style="text-align: center;">Categories</h1>
+<input class="form-control" id="search" type="text" placeholder="Search.." style="width:35%; margin:10px">
+<br>
 <table class="table table-hover">
-    <caption><button type="button" class="btn btn-primary">Add category</button></caption>
+    <caption><a href="/create_category/" class="btn btn-primary">Add category</a></caption>
     <thead>
       <tr>
         <th scope="col">Name</th>
@@ -12,17 +15,27 @@
         <th scope="col">Handle</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="category">
     {% for category in categories %}
         <tr>
             <td>{{ category.name }}</td>
             <td>{{ category.description }}</td>
             <td>
-              <div class="btn btn-sm btn-default" ><i class="far fa-edit text-primary"></i></div>
-              <div class="btn btn-sm btn-default"><i class="far fa-trash-alt text-danger"></i></div>
+              <a class="btn btn-sm btn-default" href="/update_category/{{ category.id }}"><i class="far fa-edit text-primary"></i></a>
+              <a class="btn btn-sm btn-default" href="/delete_category/{{ category.id }}"><i class="far fa-trash-alt text-danger"></i></a>
           </td>
         </tr>
     {% endfor %}
     </tbody>
   </table>
+  <script>
+      $(document).ready(function(){
+        $("#search").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#category tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+  </script>
 {% endblock %}

@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Transaction
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, UserRegistrationForm
+from .forms import LoginForm, UserRegistrationForm, TransactionForm
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, UpdateView
 
 def user_login(request):
     if request.method == 'POST':
@@ -37,14 +38,64 @@ def register(request):
 
 @login_required
 def category_list(request):
-    categories = Category.objects.all()
+    categories = Category.objects.filter(user=request.user)
     return render(request, 'categories/list.html', { 'categories': categories })
-
-def category_detail(request, name):
-    category = get_object_or_404(Category, name=name)
-    return render(request, 'categories/detail.html', { 'category': category })
 
 @login_required
 def transaction_list(request):
-    transactions = Transaction.objects.all()
-    return render(request, 'transactions/list.html', { 'transactions': transactions })
+    transactions = Transaction.objects.filter(user=request.user)
+    categories = Category.objects.filter(user=request.user)
+    return render(request, 'transactions/list.html', { 'transactions': transactions, 'categories': categories })
+
+@login_required
+def category_delete(request, id):
+    category = Category.objects.get(pk=id)
+    category.delete()
+    return redirect('/categories')
+
+class CategoryCreateView(CreateView):
+    model = Category
+    fields = ('name', 'description')
+    template_name = 'categories/category_form.html'
+    success_url = '/categories/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(CategoryCreateView, self).form_valid(form)
+
+class CategoryUpdateView(UpdateView):
+    model = Category
+    fields = ('name', 'description')
+    template_name = 'categories/category_form.html'
+    success_url = '/categories/'
+
+@login_required
+def transaction_delete(request, id):
+    transaction = Transaction.objects.get(pk=id)
+    transaction.delete()
+    return redirect('/transactions')
+
+
+class TransactionCreateView(CreateView):
+    model = Transaction
+    fields = ('categorie', 'operation_type', 'value', 'date', 'description')
+    template_name = 'transactions/transaction_form.html'
+    success_url = '/transactions/'
+    form_class = TransactionForm
+
+    def get_form(self):
+        return self.form_class(self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(TransactionCreateView, self).form_valid(form)
+
+class TransactionUpdateView(UpdateView):
+    model = Transaction
+    fields = ('categorie', 'operation_type', 'value', 'date', 'description')
+    template_name = 'transactions/transaction_form.html'
+    success_url = '/transactions/'
+    form_class = TransactionForm
+
+    def get_form(self):
+        return self.form_class(self.request.user, **self.get_form_kwargs())

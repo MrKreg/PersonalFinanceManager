@@ -7,8 +7,9 @@ class ExpenseManager(models.Manager):
         return super(ExpenseManager, self).get_queryset().filter(operayion_type='expense')
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=250)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='categories')
 
     class Meta:
         ordering = ('name',)
@@ -26,6 +27,7 @@ class Transaction(models.Model):
     value = models.DecimalField(max_digits=8, decimal_places=2)
     date = models.DateField(default=timezone.now)
     description = models.CharField(max_length=250)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
 
     class Meta:
         ordering = ('-date',)

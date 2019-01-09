@@ -3,8 +3,16 @@
 {% block title %}Transactions{% endblock %}
 
 {% block content %}
+<h1 style="text-align: center;">Transactions</h1>
+<label for="sel" style="margin-left:10px">Filter by category:</label>
+<select class="form-control" id="sel" style="width:20%; margin: 10px;">
+  <option></option>
+  {% for category in categories %}
+  <option>{{category.name}}</option>
+  {% endfor %}
+</select>
 <table class="table table-hover">
-    <caption><button type="button" class="btn btn-primary">Add transaction</button></caption>
+    <caption><a class="btn btn-primary" href="/create_transaction/">Add transaction</a></caption>
     <thead>
       <tr>
         <th scope="col">Category</th>
@@ -15,7 +23,7 @@
         <th scope="col">Handle</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="transactions">
     {% for transaction in transactions %}
         <tr>
             <td>{{ transaction.categorie }}</td>
@@ -24,11 +32,21 @@
             <td>{{ transaction.date }}</td>
             <td>{{ transaction.description }}</td>
             <td>
-              <div class="btn btn-sm btn-default" ><i class="far fa-edit text-primary"></i></div>
-              <div class="btn btn-sm btn-default"><i class="far fa-trash-alt text-danger"></i></div>
+              <a class="btn btn-sm btn-default" href="/update_transaction/{{ transaction.id }}"><i class="far fa-edit text-primary"></i></a>
+              <a class="btn btn-sm btn-default" href="/delete_transaction/{{ transaction.id }}"><i class="far fa-trash-alt text-danger"></i></a>
           </td>
         </tr>
     {% endfor %}
     </tbody>
   </table>
+  <script>
+      $(document).ready(function(){
+        $("#sel").change(function() {
+          var value = $(this).val().toLowerCase();
+          $("#transactions tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+  </script>
 {% endblock %}
